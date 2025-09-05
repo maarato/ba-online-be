@@ -38,8 +38,33 @@ source venv/bin/activate
 ```
 
 3. **Instalar dependencias:**
+
+**Opción 1 - Instalación simple (recomendada):**
 ```bash
-pip install -r requirements.txt
+pip install -r requirements-simple.txt
+```
+
+**Opción 2 - Instalación robusta (si hay conflictos):**
+```bash
+# Windows
+install-clean.bat
+
+# Linux/Mac
+chmod +x install.sh
+./install.sh
+```
+
+**Opción 3 - Corrección rápida de importaciones:**
+```bash
+# Si hay errores de importación
+fix_imports.bat
+```
+
+**Opción 4 - Instalación manual:**
+```bash
+pip install fastapi uvicorn python-multipart pydantic pydantic-settings python-dotenv sqlalchemy structlog
+pip install langchain langchain-community langchain-groq langchain-openai
+pip install httpx alembic
 ```
 
 4. **Configurar variables de entorno:**

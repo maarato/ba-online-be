@@ -17,12 +17,12 @@ class Settings(BaseSettings):
     PORT: int = 8000
     
     # CORS
-    ALLOWED_ORIGINS: List[str] = [
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "http://localhost:3001",
-        "http://127.0.0.1:3001"
-    ]
+    ALLOWED_ORIGINS: str = "http://localhost:3000,http://127.0.0.1:3000,http://localhost:3001,http://127.0.0.1:3001"
+    
+    @property
+    def allowed_origins_list(self) -> List[str]:
+        """Convertir ALLOWED_ORIGINS string a lista"""
+        return [origin.strip() for origin in self.ALLOWED_ORIGINS.split(",") if origin.strip()]
     
     # Base de datos
     DATABASE_URL: str = "sqlite:///./business_analyst.db"

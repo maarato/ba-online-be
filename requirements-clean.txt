@@ -1,0 +1,25 @@
+# FastAPI y dependencias web
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+
+# Pydantic - versión compatible con ollama
+pydantic>=2.9.0,<3.0.0
+pydantic-settings==2.1.0
+
+# Base de datos
+sqlalchemy==2.0.23
+alembic==1.13.0
+
+# HTTP - versión compatible con ollama
+httpx>=0.27,<0.29
+
+# Utilidades
+python-dotenv==1.0.0
+structlog==23.2.0
+
+# LangChain - sin versiones específicas para evitar conflictos
+langchain
+langchain-community
+langchain-groq
+langchain-openai

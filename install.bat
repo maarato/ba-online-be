@@ -8,7 +8,7 @@ REM Activar entorno virtual
 call venv\Scripts\activate
 
 REM Instalar dependencias
-pip install -r requirements.txt
+pip install -r requirements-simple.txt
 
 REM Copiar archivo de configuración
 if not exist .env (

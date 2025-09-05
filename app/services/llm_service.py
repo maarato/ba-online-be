@@ -3,7 +3,7 @@ Servicio de LLM con LangChain
 Soporte para Groq y OpenAI
 """
 
-from langchain_community.llms import Groq
+from langchain_groq import ChatGroq
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
@@ -25,7 +25,7 @@ class LLMService:
         if self.provider == "groq":
             if not settings.GROQ_API_KEY:
                 raise ValueError("GROQ_API_KEY no está configurada")
-            return Groq(
+            return ChatGroq(
                 groq_api_key=settings.GROQ_API_KEY,
                 model_name=settings.GROQ_MODEL,
                 temperature=0.7,
@@ -63,17 +63,12 @@ class LLMService:
             )
             
             # Generar respuesta
-            if self.provider == "openai":
-                messages = [
-                    SystemMessage(content=system_prompt),
-                    HumanMessage(content=user_prompt)
-                ]
-                response = self.llm.invoke(messages)
-                content = response.content
-            else:
-                # Para Groq y otros proveedores
-                full_prompt = f"{system_prompt}\n\n{user_prompt}"
-                content = self.llm.invoke(full_prompt)
+            messages = [
+                SystemMessage(content=system_prompt),
+                HumanMessage(content=user_prompt)
+            ]
+            response = self.llm.invoke(messages)
+            content = response.content
             
             # Procesar respuesta
             return self._process_response(content, current_step, current_question_key)

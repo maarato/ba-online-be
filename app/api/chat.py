@@ -6,7 +6,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.schemas.chat import ChatRequest, ChatResponse, ChatMessageCreate
-from app.services.llm_service import LLMService
+from app.services.chat_service import ChatService
 from app.models.chat import ChatSession, ChatMessage
 from app.models.brief import ProjectBrief
 import uuid
@@ -40,9 +40,9 @@ async def chat_stream(
         # Obtener brief actual
         brief_data = await get_current_brief_data(db, session.id)
         
-        # Generar respuesta con LLM
-        llm_service = LLMService()
-        llm_response = llm_service.generate_business_analyst_response(
+        # Generar respuesta con ChatService
+        chat_service = ChatService()
+        llm_response = chat_service.process_message(
             user_message=request.message,
             brief_data=brief_data,
             current_step=session.current_step,
@@ -105,15 +105,29 @@ async def get_or_create_chat_session(db: Session, session_id: str = None, device
 
 async def get_current_brief_data(db: Session, session_id: int) -> dict:
     """Obtener datos actuales del brief"""
-    # Por ahora retornamos un diccionario vacío
-    # En una implementación completa, esto obtendría los datos del brief asociado
-    return {
-        "business_goal": None,
-        "audience": None,
-        "use_cases": [],
-        "data_sources": [],
-        "integrations": [],
-        "constraints": [],
-        "budget_range": None,
-        "timeline": None
-    }
+    # Buscar brief asociado a la sesión
+    brief = db.query(ProjectBrief).filter(ProjectBrief.session_id == session_id).first()
+    
+    if brief:
+        return {
+            "business_goal": brief.business_goal,
+            "audience": brief.audience,
+            "use_cases": brief.use_cases or [],
+            "data_sources": brief.data_sources or [],
+            "integrations": brief.integrations or [],
+            "constraints": brief.constraints or [],
+            "budget_range": brief.budget_range,
+            "timeline": brief.timeline
+        }
+    else:
+        # Retornar brief vacío si no existe
+        return {
+            "business_goal": None,
+            "audience": None,
+            "use_cases": [],
+            "data_sources": [],
+            "integrations": [],
+            "constraints": [],
+            "budget_range": None,
+            "timeline": None
+        }
